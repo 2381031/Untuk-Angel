@@ -122,7 +122,7 @@ export default function Home() {
   useEffect(() => {
     if (step === totalSteps - 1) {
       // Set posisi awal ke tengah
-      setButtonPosition({ x: 100, y: 0 })
+      setButtonPosition({ x: 75, y: 0 })
       setMoveCount(0) // Reset moveCount
     }
   }, [step])
@@ -131,10 +131,10 @@ export default function Home() {
     if (step === totalSteps - 1 && moveCount < 4) {
       // Posisi yang sudah ditentukan untuk setiap langkah
       const positions = [
-        { x: 200, y: 0 },  // Kanan ujung
-        { x: 0, y: 50 },   // Kiri atas
-        { x: 200, y: 50 }, // Kanan atas
-        { x: 100, y: 0 }   // Kembali ke posisi awal (tengah)
+        { x: 200, y: 0 },   // Ujung kanan atas
+        { x: 0, y: 0 },     // Ujung kiri atas
+        { x: 200, y: 60 },  // Ujung kanan bawah
+        { x: 75, y: 0 }     // Kembali ke posisi awal (tengah)
       ]
       
       setButtonPosition(positions[moveCount])
@@ -161,7 +161,7 @@ export default function Home() {
     setShowFinalMessage(false)
     setShowHearts(false)
     setMoveCount(0)
-    setButtonPosition({ x: 100, y: 0 })
+    setButtonPosition({ x: 75, y: 0 })
   }
 
   const toggleMusic = () => {

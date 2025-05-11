@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Heart, ArrowRight, Gift, Stars, Music, VolumeX } from "lucide-react"
+import { Heart, ArrowRight, Gift, Stars, Music, VolumeX, Image } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -12,29 +12,40 @@ export default function Home() {
   const [showFinalMessage, setShowFinalMessage] = useState(false)
   const [showHearts, setShowHearts] = useState(false)
   const [musicStarted, setMusicStarted] = useState(false)
+  const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 })
+  const [moveCount, setMoveCount] = useState(0)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const totalSteps = 5
 
   const messages = [
-    "Hmm... Kamu yakin mau lihat?",
-    "Masih belum yakin nih...",
-    "Sebentar lagi ya sayang...",
-    "Aku punya sesuatu spesial untukmu...",
-    "Sedikit lagi...",
+    "Hai Angel pacarku...",
+    "Aku ada sesuatu untukmu nih..",
+    "Eh, Sebentar lagi ya sayang...",
+    "Masih satu kali klik lagi..",
+    "Sedikit lagi..."
   ]
 
   const romanticMessages = [
-    "Untuk Sayangku ❤️",
-    "Semangat sayangku cinta cantikku, aku akan selalu ada untukmu cintaku",
-    "Kamu adalah bintang terindah di langit hidupku",
-    "Cintaku padamu seperti sungai yang mengalir ke laut, tak akan pernah berhenti",
-    "Setiap detak jantungku bernyanyi untukmu, cintaku",
+    "Untukmu Sayangku ❤️",
+    "Aku bingung mau bilang apa ke kamu..",
+    "Karna kamu adalah bintang terindah di langit hidupku",
+    "Aku beruntung ketemu kamu..",
+    "karna kamu... hidupku berwarna dan mempunyai arti",
     "Kamu adalah alasan aku tersenyum setiap pagi",
     "Bersamamu, aku menemukan arti kebahagiaan yang sesungguhnya",
     "Cintaku padamu lebih dalam dari samudera",
     "Kamu adalah mimpi terindah yang menjadi nyata dalam hidupku",
+    "Makasih ya sayangku telah hadir dihidupku",
+    "Salam dari Andre pacar kamu❤️❤️",
     "Mulai Lagi"
+  ]
+
+  // Tambahkan array untuk foto-foto
+  const photos = [
+    "/photos/photo1.jpg",
+    "/photos/photo2.jpg",
+    "/photos/photo3.jpg"
   ]
 
   useEffect(() => {
@@ -82,7 +93,7 @@ export default function Home() {
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ["#f43f5e", "#ec4899", "#d946ef"],
+        colors: ["#f43f5e", "#ec4899", "#be185d", "#e11d48", "#be123c"],
       })
 
       // Show floating hearts
@@ -108,18 +119,49 @@ export default function Home() {
     }
   }, [showFinalMessage])
 
+  useEffect(() => {
+    if (step === totalSteps - 1) {
+      // Set posisi awal ke tengah
+      setButtonPosition({ x: 100, y: 0 })
+      setMoveCount(0) // Reset moveCount
+    }
+  }, [step])
+
+  const moveButton = () => {
+    if (step === totalSteps - 1 && moveCount < 4) {
+      // Posisi yang sudah ditentukan untuk setiap langkah
+      const positions = [
+        { x: 200, y: 0 },  // Kanan ujung
+        { x: 0, y: 50 },   // Kiri atas
+        { x: 200, y: 50 }, // Kanan atas
+        { x: 100, y: 0 }   // Kembali ke posisi awal (tengah)
+      ]
+      
+      setButtonPosition(positions[moveCount])
+      setMoveCount(prev => prev + 1)
+    }
+  }
+
   const handleClick = () => {
     if (step < totalSteps - 1) {
       setStep(step + 1)
-    } else {
+    } else if (moveCount >= 4) {
       setShowFinalMessage(true)
     }
   }
+
+  useEffect(() => {
+    if (step === totalSteps - 1) {
+      moveButton()
+    }
+  }, [step])
 
   const resetJourney = () => {
     setStep(0)
     setShowFinalMessage(false)
     setShowHearts(false)
+    setMoveCount(0)
+    setButtonPosition({ x: 100, y: 0 })
   }
 
   const toggleMusic = () => {
@@ -166,7 +208,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-100 via-pink-100 to-purple-100 flex flex-col items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-rose-100 via-pink-100 to-rose-100 flex flex-col items-center justify-center p-4 relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-10 text-pink-200 opacity-30">
@@ -234,15 +276,7 @@ export default function Home() {
               ))}
             </div>
 
-            <Button
-              onClick={handleClick}
-              className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded-full text-lg shadow-lg transition-all hover:shadow-xl flex items-center gap-2"
-            >
-              Klik Sini
-              <ArrowRight size={16} />
-            </Button>
-
-            <p className="mt-4 text-rose-400 text-sm italic">
+            <p className="mt-4 text-gray-800 text-sm italic mb-6">
               {step === 0
                 ? "Ada kejutan untukmu..."
                 : step === 1
@@ -251,8 +285,28 @@ export default function Home() {
                     ? "Sabar ya sayang..."
                     : step === 3
                       ? "Hampir sampai..."
-                      : "Siap-siap ya..."}
+                      : "Sedikit lagi..."}
             </p>
+
+            <div className="relative h-12">
+              <Button
+                onClick={handleClick}
+                onMouseEnter={moveButton}
+                className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded-full text-lg shadow-lg transition-all hover:shadow-xl flex items-center gap-2"
+                style={{
+                  position: step === totalSteps - 1 ? 'absolute' : 'relative',
+                  left: step === totalSteps - 1 ? `${buttonPosition.x}px` : '50%',
+                  top: step === totalSteps - 1 ? `${buttonPosition.y}px` : '50%',
+                  transform: step === totalSteps - 1 ? 'none' : 'translate(-50%, -50%)',
+                  transition: 'all 0.3s ease',
+                  zIndex: 10,
+                  cursor: step === totalSteps - 1 && moveCount < 4 ? 'not-allowed' : 'pointer'
+                }}
+              >
+                Klik Sini
+                <ArrowRight size={16} />
+              </Button>
+            </div>
           </motion.div>
         ) : (
           <motion.div
@@ -276,29 +330,82 @@ export default function Home() {
 
             <div className="space-y-6">
               {romanticMessages.map((message, index) => (
-                <motion.p
+                <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + index * 0.2, duration: 0.5 }}
-                  className={cn(
+                  className="space-y-4"
+                >
+                  <p className={cn(
                     "text-lg",
                     index === 0 ? "text-rose-600 font-bold text-3xl" : 
                     index === romanticMessages.length - 1 ? "mt-8" : 
                     "text-rose-500"
-                  )}
-                >
-                  {index === romanticMessages.length - 1 ? (
-                    <Button
-                      onClick={resetJourney}
-                      className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded-full text-lg shadow-lg transition-all hover:shadow-xl"
+                  )}>
+                    {index === romanticMessages.length - 1 ? (
+                      <Button
+                        onClick={resetJourney}
+                        className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded-full text-lg shadow-lg transition-all hover:shadow-xl"
+                      >
+                        {message}
+                      </Button>
+                    ) : index === 0 ? (
+                      message
+                    ) : (
+                      message.split('sayangku').map((part, i, arr) => (
+                        <span key={i}>
+                          {part}
+                          {i < arr.length - 1 && <span className="text-rose-500">sayangku</span>}
+                        </span>
+                      ))
+                    )}
+                  </p>
+                  
+                  {/* Tambahkan foto setelah pesan tertentu */}
+                  {index === 2 && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.5, duration: 0.5 }}
+                      className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg"
                     >
-                      {message}
-                    </Button>
-                  ) : (
-                    message
+                      <img
+                        src={photos[0]}
+                        alt="Foto romantis"
+                        className="w-full h-full object-cover"
+                      />
+                    </motion.div>
                   )}
-                </motion.p>
+                  {index === 5 && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.5, duration: 0.5 }}
+                      className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg"
+                    >
+                      <img
+                        src={photos[1]}
+                        alt="Foto romantis"
+                        className="w-full h-full object-cover"
+                      />
+                    </motion.div>
+                  )}
+                  {index === 8 && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.5, duration: 0.5 }}
+                      className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg"
+                    >
+                      <img
+                        src={photos[2]}
+                        alt="Foto romantis"
+                        className="w-full h-full object-cover"
+                      />
+                    </motion.div>
+                  )}
+                </motion.div>
               ))}
             </div>
           </motion.div>

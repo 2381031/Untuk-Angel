@@ -20,7 +20,7 @@ export default function Home() {
 
   const messages = [
     "Hai Angel pacarku...",
-    "Aku ada sesuatu untukmu nih..",
+    "ada sesuatu untukmu nih..",
     "Eh, Sebentar lagi ya sayang...",
     "Masih satu kali klik lagi..",
     "Sedikit lagi..."
@@ -276,9 +276,9 @@ export default function Home() {
               ))}
             </div>
 
-            <p className="mt-4 text-gray-800 text-sm italic mb-6">
+            <p className="mt-4 text-rose-500 text-sm italic mb-6">
               {step === 0
-                ? "Ada kejutan untukmu..."
+                ? "Klik selanjutnya sayang"
                 : step === 1
                   ? "Masih penasaran?"
                   : step === 2
